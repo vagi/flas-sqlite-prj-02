@@ -7,42 +7,37 @@ from datetime import datetime, date
 app = Flask(__name__)
 
 
-# Uncomment and change parameters to create a new table
+# Uncomment to create a table
 """ 
-connection = sqlite3.connect('blog.sqlite')
-cursor = connection.cursor()
-# Script for creation of a new table in the database
-cursor.execute("CREATE TABLE IF NOT EXISTS posts (id integer primary key AUTOINCREMENT, title varchar(100), description varchar(200), date datetime)")
-connection.commit()
-connection.close()
-
+    connection = sqlite3.connect('blog.sqlite')
+    cursor = connection.cursor()
+    # Script for creation of a new table in the database
+    cursor.execute("CREATE TABLE IF NOT EXISTS posts (id integer primary key AUTOINCREMENT, title varchar(100), description varchar(200), date datetime)")
+    connection.commit()
+    connection.close()
 """
 
-
+# A decorator used to tell the application which URL
+# is associated with the following function
 @app.route('/')
 @app.route('/index')
 def show_all_posts():
-    # Подключение к базе данных
+    """
+    The function loads all posts from specified table of the database.
+    Returns:
+        the main index.HTML page to be loaded with all posts
+    """
+    # Coonection to the database
     connection = sqlite3.connect('blog.sqlite')
-    # Инициализация курсора для выполнения операций
+    # Initialization of cursor for operation procedure
     cursor = connection.cursor()
-    # в методе execute можно вставлять любые SQL команды
+    # Writing SQL template that will get data from all columns of the table
     cursor.execute("SELECT * FROM posts")
-    # в случае если надо передать аргументы в строку
-    # лучше это делать так, передавать аргумент
-    # или список аргументов вторым параметром
-    # пример:
-    """
-      если один параметр
-      >>> cursor.execute("SELECT * FROM students WHERE id < ?", 10)
-      если много параметров
-      >>> cursor.execute("SELECT * FROM students WHERE id < ? AND id > ?", (10, 5))
-    """
-    # Далее чтобы забрать результат команды SELECT используем метод fetchall
+    # Fetching all data
     all_posts = cursor.fetchall()
-    # Обязательно закрываем соединение
+    # Closing the connection
     connection.close()
-    # Передаем список студентов в темплейт
+    # Returning main HTML page with all posts
     return render_template('index.html', posts=all_posts)
 
 
@@ -51,19 +46,16 @@ def show_all_posts():
 @app.route('/index/add_post', methods=('GET', 'POST'))
 def add_new_post():
     """
-    In case of GET request this function loads add_post.html with the Form.
+    In case of GET request this function loads add_post.html with the <form>>.
     Once a POST request sent, gets two parameters (str) from
     the Form and pass it to the database.
-    Attributes:
-        title (str): Text of new post title with length of 100 char
-        description (str): Text of new post description with length 200 of char
     Returns:
-        the main HTML page to be loaded with all posts
+        redirects to the main HTML page with all posts
     """
     if request.method == 'GET':
         return render_template('add_post.html',)
     else:
-        # Getting input of text and description in the <form>
+        # Getting input of title and description from the <form>
         new_title = request.form['title']
         new_description = request.form['description']
 
@@ -73,11 +65,12 @@ def add_new_post():
         else:
             # Opening connection to the database
             connection = sqlite3.connect('blog.sqlite')
-            # Инициализация курсора для выполнения операций
+            # Initialization of cursor for operation procedure
             cursor = connection.cursor()
-            # Далее располагаем данные в том порядке в котором хотим записать в базу данных
+            # Creatiing tuple with parameters
             values = (new_title, new_description, date.today())
-            # Arranging template of SQL request to write in the data
+            # Arranging template of SQL request to write in the data and
+            # passing the tuple with params to it
             cursor.execute("""INSERT INTO posts (id, title, description, date) 
                             VALUES (null, ?, ?, ?)""",
                             values
@@ -90,27 +83,26 @@ def add_new_post():
             return redirect('/index')
 
 
+# A decorator used to tell the application which URLs is
+# associated with the following function
 @app.route('/index/edit_post', methods=('GET', 'POST'))
 def edit_post():
     """
-    In case of GET request this function loads edit_post.html with the Form.
-    Once a POST request sent, gets two parameters (str) from
-    the Form and pass it to the database.
-    Attributes:
-        title (str): Text of new post title with length of 100 char
-        description (str): Text of new post description with length 200 of char
+    In case of GET request this function loads edit_post.html with the <form>.
+    Once a POST request sent, gets one mandatory parameter and two optional
+    parameters from the <form> and pass it to the database.
     Returns:
         the main HTML page to be loaded with all posts
     """
     if request.method == 'GET':
         return render_template('edit_post.html',)
     else:
-        # Getting input of text and description in the <form>
+        # Getting input of id, text and description from the <form>
         post_id = request.form['id']
         post_title = request.form['title']
         post_description = request.form['description']
 
-        # Checking whether ID of post is empty
+        # Checking whether id of post is empty
         if not post_id:
             return "<i>Please enter ID of a post to be updated!</i>"
         else:
@@ -118,7 +110,7 @@ def edit_post():
             connection = sqlite3.connect('blog.sqlite')
             # Cursor initialization for procedure
             cursor = connection.cursor()
-            # Далее располагаем данные в том порядке в котором хотим записать в базу данных
+            # Creatiing tuple with parameters
             values = (post_title, post_description, post_id)
             # Arranging template of SQL request to update the data
             cursor.execute("""
@@ -134,22 +126,21 @@ def edit_post():
     return redirect('/index')
 
 
+# A decorator used to tell the application which URLs is
+# associated with the following function
 @app.route('/index/delete_post', methods=('GET', 'POST'))
 def delete_post():
     """
-    In case of GET request this function loads edit_post.html with the Form.
-    Once a POST request sent, gets two parameters (str) from
-    the Form and pass it to the database.
-    Attributes:
-        title (str): Text of new post title with length of 100 char
-        description (str): Text of new post description with length 200 of char
+    In case of GET request this function loads delete_post.html with the <form>.
+    Once a POST request sent, gets one parameter (int) from
+    the <form> and pass it to the database.
     Returns:
         the main HTML page to be loaded with all posts
     """
     if request.method == 'GET':
         return render_template('delete_post.html',)
     else:
-        # Getting input of text and description in the <form>
+        # Getting input of ID from the <form>
         post_id = request.form['id']
         # Checking whether ID of post is empty
         if not post_id:
