@@ -15,8 +15,8 @@
         <p><b>Date: {{ post[3] }}</b></p>
         <p>(Post ID: {{post[0]}})</p>
         <a href="/index/{{ post[0] }}" class="btn btn-warning">More</a>
-        <a href="/index/edit_post" class="btn btn-success">Edit</a>
-        <a href="/index/delete_post" class="btn btn-danger">Delete</a>
+        <a href="/index/{{ post[0] }}/edit_post" class="btn btn-success">Edit</a>
+        <a href="/index/{{ post[0] }}/delete_post" class="btn btn-danger">Delete</a>
     </div>
     {% endfor %}
 

@@ -8,14 +8,14 @@ app = Flask(__name__)
 
 
 # Uncomment to create a table
-""" 
-    connection = sqlite3.connect('blog.sqlite')
-    cursor = connection.cursor()
-    # Script for creation of a new table in the database
-    cursor.execute("CREATE TABLE IF NOT EXISTS posts (id integer primary key AUTOINCREMENT, title varchar(100), description varchar(200), date datetime)")
-    connection.commit()
-    connection.close()
-"""
+
+connection = sqlite3.connect('blog.sqlite')
+cursor = connection.cursor()
+# Script for creation of a new table in the database
+cursor.execute("CREATE TABLE IF NOT EXISTS posts (id integer primary key AUTOINCREMENT, title varchar(100), description varchar(200), date datetime)")
+connection.commit()
+connection.close()
+
 
 # A decorator used to tell the application which URL
 # is associated with the following function
