@@ -8,15 +8,12 @@ app = Flask(__name__)
 
 
 connection = sqlite3.connect('blog.sqlite')
-
 cursor = connection.cursor()
-
 # Scrypt for creation of a new table in the database
 cursor.execute("CREATE TABLE IF NOT EXISTS posts (id integer primary key AUTOINCREMENT, title varchar(100), description varchar(200), date datetime)")
-
 connection.commit()
-
 connection.close()
+
 
 @app.route('/')
 @app.route('/index')
@@ -72,13 +69,10 @@ def add_new_post():
         else:
             # Opening connection to the database
             connection = sqlite3.connect('blog.sqlite')
-
             # Инициализация курсора для выполнения операций
             cursor = connection.cursor()
-
             # Далее располагаем данные в том порядке в котором хотим записать в базу данных
             values = (new_title, new_description, date.today())
-
             # Arranging template of SQL request to write in the data
             cursor.execute("""INSERT INTO posts (id, title, description, date) 
                             VALUES (null, ?, ?, ?)""",
@@ -86,32 +80,13 @@ def add_new_post():
                 )
             # Sending the data to database
             connection.commit()
-
             # Closing connection to the database
             connection.close()
-
             # Now redirect to the main page with all posts
             return redirect('/index')
 
 
-@app.route('/index/<int:id>')
-def content_of_post(id):
-    id = request.args.get(id)
-    print("ID:", id)
-    connection = sqlite3.connect('blog.sqlite')
-    # Инициализация курсора для выполнения операций
-    cursor = connection.cursor()
-
-    # в методе execute можно вставлять любые SQL команды
-    cursor.execute("""SELECT * FROM posts WHERE id = ?""", id)
-    post = cursor.fetchall()
-    # Обязательно закрываем соединение
-    connection.close()
-    return render_template("content_post.html", post=post)
-
-
-
-@app.route('/edit', methods=('GET', 'POST'))
+@app.route('/edit_post', methods=('GET', 'POST'))
 def edit_post():
     """
     In case of GET request this function loads edit_post.html with the Form.
@@ -123,6 +98,36 @@ def edit_post():
     Returns:
         the main HTML page to be loaded with all posts
     """
+    if request.method == 'GET':
+        return render_template('edit_post.html',)
+    else:
+        # Getting input of text and description in the <form>
+        post_id = request.form['id']
+        post_title = request.form['title']
+        post_description = request.form['description']
+
+        # Checking whether ID of post is empty
+        if not post_id:
+            return "<i>Please enter ID of a post to be updated!</i>"
+        else:
+            # Opening connection to the database
+            connection = sqlite3.connect('blog.sqlite')
+            # Cursor initialization for procedure
+            cursor = connection.cursor()
+            # Далее располагаем данные в том порядке в котором хотим записать в базу данных
+            values = (post_title, post_description, post_id)
+            # Arranging template of SQL request to update the data
+            cursor.execute("""
+                            UPDATE posts 
+                            SET title=?, description=?
+                            WHERE id=?
+                            """, values)
+            # Sending the data to database
+            connection.commit()
+            # Closing connection to the database
+            connection.close()
+    # Now redirect to the main page with all posts
+    return redirect('/index')
 
 
 @app.route('/delete', methods=('GET', 'POST'))
@@ -137,6 +142,10 @@ def delete_post():
     Returns:
         the main HTML page to be loaded with all posts
     """
+
+
+
+    return redirect('/index')
 
 
 
