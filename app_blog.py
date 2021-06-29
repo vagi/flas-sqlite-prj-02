@@ -7,12 +7,17 @@ from datetime import datetime, date
 app = Flask(__name__)
 
 
+""" 
+# This snippet used to create a table
+
 connection = sqlite3.connect('blog.sqlite')
 cursor = connection.cursor()
-# Scrypt for creation of a new table in the database
+# Script for creation of a new table in the database
 cursor.execute("CREATE TABLE IF NOT EXISTS posts (id integer primary key AUTOINCREMENT, title varchar(100), description varchar(200), date datetime)")
 connection.commit()
 connection.close()
+
+"""
 
 
 @app.route('/')
@@ -130,7 +135,7 @@ def edit_post():
     return redirect('/index')
 
 
-@app.route('/delete', methods=('GET', 'POST'))
+@app.route('/delete_post', methods=('GET', 'POST'))
 def delete_post():
     """
     In case of GET request this function loads edit_post.html with the Form.
@@ -142,11 +147,30 @@ def delete_post():
     Returns:
         the main HTML page to be loaded with all posts
     """
-
-
-
+    if request.method == 'GET':
+        return render_template('delete_post.html',)
+    else:
+        # Getting input of text and description in the <form>
+        post_id = request.form['id']
+        # Checking whether ID of post is empty
+        if not post_id:
+            return "<i>Please enter ID of a post you want to delete!</i>"
+        else:
+            # Opening connection to the database
+            connection = sqlite3.connect('blog.sqlite')
+            # Cursor initialization for procedure
+            cursor = connection.cursor()
+            # Arranging template of SQL request to delete the data
+            cursor.execute("""
+                            DELETE FROM posts 
+                            WHERE id=?
+                            """, post_id)
+            # Sending the data to database
+            connection.commit()
+            # Closing connection to the database
+            connection.close()
+    # Now redirect to the main page with all posts
     return redirect('/index')
-
 
 
 # Inserting condition in case this file is used as a module (imported by another file)
