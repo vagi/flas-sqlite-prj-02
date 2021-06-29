@@ -6,13 +6,12 @@ from datetime import datetime, date
 # Initialize Flask object
 app = Flask(__name__)
 
-"""
-Скрипт для создания базы данных и таблицы                                                  |
-"""
+
 connection = sqlite3.connect('blog.sqlite')
 
 cursor = connection.cursor()
 
+# Scrypt for creation of a new table in the database
 cursor.execute("CREATE TABLE IF NOT EXISTS posts (id integer primary key AUTOINCREMENT, title varchar(100), description varchar(200), date datetime)")
 
 connection.commit()
@@ -49,7 +48,6 @@ def show_all_posts():
     return render_template('index.html', posts=all_posts)
 
 
-
 # A decorator used to tell the application which URLs is
 # associated with the following function
 @app.route('/add_post', methods=('GET', 'POST'))
@@ -83,7 +81,8 @@ def add_new_post():
 
             # Далее располагаем данные в том порядке в котором хотим записать в базу данных
             values = (new_title, new_description, date.today())
-            print(values)
+
+            # Arranging template of SQL request to write in the data
             cursor.execute("""INSERT INTO posts (id, title, description, date) 
                             VALUES (null, ?, ?, ?)""",
                             values
