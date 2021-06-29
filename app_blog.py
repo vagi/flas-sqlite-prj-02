@@ -85,8 +85,8 @@ def add_new_post():
 
 # A decorator used to tell the application which URLs is
 # associated with the following function
-@app.route('/index/edit_post', methods=('GET', 'POST'))
-def edit_post():
+@app.route('/index/<id>/edit_post', methods=('GET', 'POST'))
+def edit_post(id):
     """
     In case of GET request this function loads edit_post.html with the <form>.
     Once a POST request sent, gets one mandatory parameter and two optional
@@ -95,10 +95,11 @@ def edit_post():
         the main HTML page to be loaded with all posts
     """
     if request.method == 'GET':
-        return render_template('edit_post.html',)
+        return render_template('edit_post.html', id=id )
     else:
         # Getting input of id, text and description from the <form>
-        post_id = request.form['id']
+        post_id = id
+        #print("Post ID:", id)  # check of the parameter
         post_title = request.form['title']
         post_description = request.form['description']
 
@@ -128,8 +129,8 @@ def edit_post():
 
 # A decorator used to tell the application which URLs is
 # associated with the following function
-@app.route('/index/delete_post', methods=('GET', 'POST'))
-def delete_post():
+@app.route('/index/<id>/delete_post', methods=('GET', 'POST'))
+def delete_post(id):
     """
     In case of GET request this function loads delete_post.html with the <form>.
     Once a POST request sent, gets one parameter (int) from
@@ -138,13 +139,13 @@ def delete_post():
         the main HTML page to be loaded with all posts
     """
     if request.method == 'GET':
-        return render_template('delete_post.html',)
+        return render_template('delete_post.html', id=id)
     else:
-        # Getting input of ID from the <form>
-        post_id = request.form['id']
+        # Getting ID from parameters of function
+        post_id = id
         # Checking whether ID of post is empty
         if not post_id:
-            return "<i>Please enter ID of a post you want to delete!</i>"
+            return "<i>Error: an id of Post was not entered</i>"
         else:
             # Opening connection to the database
             connection = sqlite3.connect('blog.sqlite')
