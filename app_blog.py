@@ -37,13 +37,10 @@ def show_all_posts():
       если много параметров
       >>> cursor.execute("SELECT * FROM students WHERE id < ? AND id > ?", (10, 5))
     """
-
     # Далее чтобы забрать результат команды SELECT используем метод fetchall
     all_posts = cursor.fetchall()
-
     # Обязательно закрываем соединение
     connection.close()
-
     # Передаем список студентов в темплейт
     return render_template('index.html', posts=all_posts)
 
@@ -95,6 +92,52 @@ def add_new_post():
 
             # Now redirect to the main page with all posts
             return redirect('/index')
+
+
+@app.route('/index/<int:id>')
+def content_of_post(id):
+    id = request.args.get(id)
+    print("ID:", id)
+    connection = sqlite3.connect('blog.sqlite')
+    # Инициализация курсора для выполнения операций
+    cursor = connection.cursor()
+
+    # в методе execute можно вставлять любые SQL команды
+    cursor.execute("""SELECT * FROM posts WHERE id = ?""", id)
+    post = cursor.fetchall()
+    # Обязательно закрываем соединение
+    connection.close()
+    return render_template("content_post.html", post=post)
+
+
+
+@app.route('/edit', methods=('GET', 'POST'))
+def edit_post():
+    """
+    In case of GET request this function loads edit_post.html with the Form.
+    Once a POST request sent, gets two parameters (str) from
+    the Form and pass it to the database.
+    Attributes:
+        title (str): Text of new post title with length of 100 char
+        description (str): Text of new post description with length 200 of char
+    Returns:
+        the main HTML page to be loaded with all posts
+    """
+
+
+@app.route('/delete', methods=('GET', 'POST'))
+def delete_post():
+    """
+    In case of GET request this function loads edit_post.html with the Form.
+    Once a POST request sent, gets two parameters (str) from
+    the Form and pass it to the database.
+    Attributes:
+        title (str): Text of new post title with length of 100 char
+        description (str): Text of new post description with length 200 of char
+    Returns:
+        the main HTML page to be loaded with all posts
+    """
+
 
 
 # Inserting condition in case this file is used as a module (imported by another file)
