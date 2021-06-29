@@ -7,9 +7,8 @@ from datetime import datetime, date
 app = Flask(__name__)
 
 
+# Uncomment and change parameters to create a new table
 """ 
-# This snippet used to create a table
-
 connection = sqlite3.connect('blog.sqlite')
 cursor = connection.cursor()
 # Script for creation of a new table in the database
@@ -49,7 +48,7 @@ def show_all_posts():
 
 # A decorator used to tell the application which URLs is
 # associated with the following function
-@app.route('/add_post', methods=('GET', 'POST'))
+@app.route('/index/add_post', methods=('GET', 'POST'))
 def add_new_post():
     """
     In case of GET request this function loads add_post.html with the Form.
@@ -91,7 +90,7 @@ def add_new_post():
             return redirect('/index')
 
 
-@app.route('/edit_post', methods=('GET', 'POST'))
+@app.route('/index/edit_post', methods=('GET', 'POST'))
 def edit_post():
     """
     In case of GET request this function loads edit_post.html with the Form.
@@ -135,7 +134,7 @@ def edit_post():
     return redirect('/index')
 
 
-@app.route('/delete_post', methods=('GET', 'POST'))
+@app.route('/index/delete_post', methods=('GET', 'POST'))
 def delete_post():
     """
     In case of GET request this function loads edit_post.html with the Form.

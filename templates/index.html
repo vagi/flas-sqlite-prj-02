@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1>All posts:</h1>
+<b><a href="/index/add_post" class="btn btn-success">New Post</a></b>
 
     {% for post in posts %}
     <div class="alert alert-info">
@@ -14,8 +15,8 @@
         <p><b>Date: {{ post[3] }}</b></p>
         <p>(Post ID: {{post[0]}})</p>
         <a href="/index/{{ post[0] }}" class="btn btn-warning">More</a>
-        <a href="/index/{{ post[0] }}/edit" class="btn btn-success">Edit</a>
-        <a href="/index/{{ post[0] }}/delete" class="btn btn-danger">Delete</a>
+        <a href="/index/edit_post" class="btn btn-success">Edit</a>
+        <a href="/index/delete_post" class="btn btn-danger">Delete</a>
     </div>
     {% endfor %}
 
