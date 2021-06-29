@@ -1,7 +1,7 @@
 # Import required libraries
 from flask import Flask, render_template, request, make_response, session, redirect, url_for
 import sqlite3
-from datetime import datetime
+from datetime import datetime, date
 
 # Initialize Flask object
 app = Flask(__name__)
@@ -68,33 +68,34 @@ def add_new_post():
         return render_template('add_post.html',)
     else:
         # Getting input of text and description in the <form>
-        new_post_title = request.form['title']
-        new_post_description = request.form['description']
+        new_title = request.form['title']
+        new_description = request.form['description']
 
-        # Checking whether ttile or description are empty
-        if not new_post_title or new_post_description:
-            return "<i>Empty title or description sent!</i>"
+        # Checking whether title or description of post are empty
+        if not new_title or not new_description:
+            return "<i>Please fill in the title and the description of your post!</i>"
         else:
-            # Passing the received text to the database
+            # Opening connection to the database
+            connection = sqlite3.connect('blog.sqlite')
 
+            # Инициализация курсора для выполнения операций
+            cursor = connection.cursor()
 
+            # Далее располагаем данные в том порядке в котором хотим записать в базу данных
+            values = (new_title, new_description, date.today())
+            print(values)
+            cursor.execute("""INSERT INTO posts (id, title, description, date) 
+                            VALUES (null, ?, ?, ?)""",
+                            values
+                )
+            # Sending the data to database
+            connection.commit()
 
+            # Closing connection to the database
+            connection.close()
 
             # Now redirect to the main page with all posts
             return redirect('/index')
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # Inserting condition in case this file is used as a module (imported by another file)
