@@ -260,3 +260,5 @@ zict==2.0.0
 zipp @ file:///tmp/build/80754af9/zipp_1615904174917/work
 zope.event==4.5.0
 zope.interface @ file:///opt/concourse/worker/volumes/live/c60b05dd-b3e4-49e9-4328-f84992cb3b8c/volume/zope.interface_1616357196088/work
+
+flask~=1.1.2
