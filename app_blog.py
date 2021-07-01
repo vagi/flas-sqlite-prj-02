@@ -12,6 +12,7 @@ app = Flask(__name__)
 connection = sqlite3.connect('blog.sqlite')
 cursor = connection.cursor()
 # Script for creation of a new table in the database
+# If a table with the same name exists nothing will change
 cursor.execute("CREATE TABLE IF NOT EXISTS posts (id integer primary key AUTOINCREMENT, title varchar(100), description varchar(200), date datetime)")
 connection.commit()
 connection.close()
@@ -41,8 +42,6 @@ def show_all_posts():
     return render_template('index.html', posts=all_posts)
 
 
-# A decorator used to tell the application which URLs is
-# associated with the following function
 @app.route('/index/add_post', methods=('GET', 'POST'))
 def add_new_post():
     """
@@ -58,7 +57,6 @@ def add_new_post():
         # Getting input of title and description from the <form>
         new_title = request.form['title']
         new_description = request.form['description']
-
         # Checking whether title or description of post are empty
         if not new_title or not new_description:
             return "<i>Please fill in the title and the description of your post!</i>"
@@ -104,8 +102,9 @@ def edit_post(id):
         post_description = request.form['description']
 
         # Checking whether id of post is empty
+        # This condition to be removed and try/except is to be used
         if not post_id:
-            return "<i>Please enter ID of a post to be updated!</i>"
+            return "<i>Error: an id of the Post is empty</i>"
         else:
             # Opening connection to the database
             connection = sqlite3.connect('blog.sqlite')
@@ -145,7 +144,7 @@ def delete_post(id):
         post_id = id
         # Checking whether ID of post is empty
         if not post_id:
-            return "<i>Error: an id of Post was not entered</i>"
+            return "<i>Error: an id of the Post is empty</i>"
         else:
             # Opening connection to the database
             connection = sqlite3.connect('blog.sqlite')
