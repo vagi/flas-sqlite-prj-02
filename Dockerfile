@@ -20,3 +20,5 @@ CMD ["flask", "run", "-h", "0.0.0.0"]
 # IMPORTANT: The Docker wants that your application file is to
 # be named as app.py by default otherwise the above CMD
 # will not work.
+
+# CLI command: docker run -p 5000:5000 <id of image>
