@@ -21,4 +21,6 @@ CMD ["flask", "run", "-h", "0.0.0.0"]
 # be named as app.py by default otherwise the above CMD
 # will not work.
 
-# CLI command: docker run -p 5000:5000 <id of image>
+# CLI command: docker run -d --rm  -p 5000:5000 <id of image>
+# -d optional param to start container in background mode
+# -rm optional param will remove container after it is stopped
