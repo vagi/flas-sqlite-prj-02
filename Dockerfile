@@ -25,4 +25,4 @@ CMD ["flask", "run", "-h", "0.0.0.0", "-p", "8000" ]
 # CLI command: docker run -d --rm  -p 5000:5000 <id of image>
 # -d optional param to start container in background mode
 # -rm optional param will remove container after it is stopped
-# Biuld initial docker image: docker build -t flask_blog_prj_02 .
+# Build initial docker image: docker build -t flask_blog_prj_02 .

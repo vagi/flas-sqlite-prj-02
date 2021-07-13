@@ -1,6 +1,5 @@
 version: "3.3"
 
-# Start building images with CLI: $ docker-compose up --build
 
 services:
   app:
