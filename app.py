@@ -71,9 +71,8 @@ def add_new_post():
             # Arranging template of SQL request to write in the data and
             # passing the tuple with params to it
             cursor.execute("""INSERT INTO posts (id, title, description, date)
-                            VALUES (null, ?, ?, ?)""",
-                            values
-                )
+                            VALUES (null, ?, ?, ?)""", values
+            )
             # Sending the data to database
             connection.commit()
             # Closing connection to the database
