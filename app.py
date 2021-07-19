@@ -1,7 +1,7 @@
 # Import required libraries
-from flask import Flask, render_template, request, make_response, session, redirect, url_for
+from flask import Flask, render_template, request, redirect
 import sqlite3
-from datetime import datetime, date
+from datetime import date
 
 # Initialize Flask object
 app = Flask(__name__)
@@ -13,7 +13,8 @@ connection = sqlite3.connect('blog.sqlite')
 cursor = connection.cursor()
 # Script for creation of a new table in the database
 # If a table with the same name exists nothing will change
-cursor.execute("CREATE TABLE IF NOT EXISTS posts (id integer primary key AUTOINCREMENT, title varchar(100), description varchar(200), date datetime)")
+cursor.execute("CREATE TABLE IF NOT EXISTS posts (id integer primary key AUTOINCREMENT, title varchar(100), "
+               "description varchar(200), date datetime)")
 connection.commit()
 connection.close()
 
@@ -69,10 +70,9 @@ def add_new_post():
             values = (new_title, new_description, date.today())
             # Arranging template of SQL request to write in the data and
             # passing the tuple with params to it
-            cursor.execute("""INSERT INTO posts (id, title, description, date) 
-                            VALUES (null, ?, ?, ?)""",
-                            values
-                )
+            cursor.execute("""INSERT INTO posts (id, title, description, date)
+                            VALUES (null, ?, ?, ?)""", values
+            )
             # Sending the data to database
             connection.commit()
             # Closing connection to the database
@@ -93,11 +93,11 @@ def edit_post(id):
         the main HTML page to be loaded with all posts
     """
     if request.method == 'GET':
-        return render_template('edit_post.html', id=id )
+        return render_template('edit_post.html', id=id)
     else:
         # Getting input of id, text and description from the <form>
         post_id = id
-        #print("Post ID:", id)  # check of the parameter
+        # print("Post ID:", id)  # check of the parameter
         post_title = request.form['title']
         post_description = request.form['description']
 
@@ -114,7 +114,7 @@ def edit_post(id):
             values = (post_title, post_description, post_id)
             # Arranging template of SQL request to update the data
             cursor.execute("""
-                            UPDATE posts 
+                            UPDATE posts
                             SET title=?, description=?
                             WHERE id=?
                             """, values)
@@ -152,7 +152,7 @@ def delete_post(id):
             cursor = connection.cursor()
             # Arranging template of SQL request to delete the data
             cursor.execute("""
-                            DELETE FROM posts 
+                            DELETE FROM posts
                             WHERE id=?
                             """, post_id)
             # Sending the data to database
