@@ -44,7 +44,7 @@ def show_all_posts():
 
 
 @app.route('/index/add_post', methods=('GET', 'POST'))
-def add_new_post():
+deff add_new_post():
     """
     In case of GET request this function loads add_post.html with the <form>>.
     Once a POST request sent, gets two parameters (str) from
